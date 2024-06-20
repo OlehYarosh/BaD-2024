@@ -25,6 +25,30 @@ function statistics(numbers) {
     return { maxNum, minNum, mean, medianRes };
 }
 
+function longestSequence(numbers, increasing = true) {
+    let longestSeq = [];
+    let currentSeq = [];
+
+    for (let i = 0; i < numbers.length; i++) {
+        if (currentSeq.length === 0 ||
+            (increasing && numbers[i] > currentSeq[currentSeq.length - 1]) ||
+            (!increasing && numbers[i] < currentSeq[currentSeq.length - 1])) {
+            currentSeq.push(numbers[i]);
+        } else {
+            if (currentSeq.length > longestSeq.length) {
+                longestSeq = currentSeq;
+            }
+            currentSeq = [numbers[i]];
+        }
+    }
+
+    if (currentSeq.length > longestSeq.length) {
+        longestSeq = currentSeq;
+    }
+
+    return longestSeq;
+}
+
 async function main() {
     const txtFile = '10m.txt';
     try {
@@ -35,6 +59,12 @@ async function main() {
         console.log(`Min number: ${minNum}`);
         console.log(`Mean: ${mean}`);
         console.log(`Median: ${medianRes}`);
+
+        const longestIncreasingSeq = longestSequence(numbers, true)
+        const longestDecreasingSeq = longestSequence(numbers, false)
+
+        console.log(`Longest increasing sequence: ${longestIncreasingSeq}`)
+        console.log(`Longest decreasing sequence: ${longestDecreasingSeq}`)
     }
     catch (error) {
         console.log('Error reading the file', error);
